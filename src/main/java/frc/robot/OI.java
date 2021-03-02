@@ -12,25 +12,27 @@ import frc.robot.commands.ExampleCommand;
 /** Add your docs here. */
 public class OI {
 
-    Joystick driverController = new Joystick(RobotMap.DRIVER_CONTROLLER);
-    Button button = new JoystickButton(driverController,6);
-    
-    public double GetDriverRawAxis(int axis)
-    {
-        return driverController.getRawAxis(axis);
+    Joystick joystick_controller = new Joystick(RobotMap.DRIVER_CONTROLLER);
+    Button button = new JoystickButton(joystick_controller, 6);
+
+    public double GetDriverRawAxis(int axis) {
+        return joystick_controller.getRawAxis(axis);
     }
 
-    public void GetButton()
-    {
-        if(driverController.getRawButtonPressed(1)){
+    public void GetButton() {
+        // joystick_controller.getRawButtonPressed(btnNumber) - get true or false if the
+        // button
+        // that is specificed is pressed
+        // joysticl_controller.getRawButtonReleased(btnNumber) - get true if the button
+        // is begin released.
+        if (joystick_controller.getRawButtonPressed(1)) {
             button.whenPressed(new ExampleCommand(true));
-        } else if(driverController.getRawButtonReleased(1)){
+        } else if (joystick_controller.getRawButtonReleased(1)) {
             button.whenPressed(new ExampleCommand(false));
         }
     }
 
-    public Joystick getJoystick()
-    {
-        return driverController;
+    public Joystick getJoystick() {
+        return joystick_controller;
     }
 }

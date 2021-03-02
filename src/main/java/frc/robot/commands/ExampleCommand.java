@@ -9,8 +9,6 @@ import java.util.concurrent.TimeUnit;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GaniPower;
 
@@ -19,13 +17,14 @@ public class ExampleCommand extends CommandBase {
 
   /** Creates a new ExampleCommand. */
   public ExampleCommand(boolean btnPressed) {
+    //Initalize the motor
     VictorSPX gSpx = new VictorSPX(6);
+    //When the button is pressed it sets the speed to 0.35 otherwise it will set it to 0
     if(btnPressed){
       gSpx.set(ControlMode.PercentOutput, 0.35);
     }else{
       gSpx.set(ControlMode.PercentOutput, 0);
     }
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

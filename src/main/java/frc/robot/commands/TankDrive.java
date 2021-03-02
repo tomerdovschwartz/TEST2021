@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.networktables.LogMessage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -19,6 +20,7 @@ public class TankDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -29,6 +31,8 @@ public class TankDrive extends CommandBase {
     Robot.m_oi.GetButton();
 
     Robot.driverTrain.ArcadeDrive(-xAxis, yAxis, true);
+    SmartDashboard.putNumber("Joystick X Value", xAxis);
+    SmartDashboard.putNumber("Joystick Y Value", yAxis);
   }
 
   // Called once the command ends or is interrupted.
