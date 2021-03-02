@@ -16,12 +16,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 /** Add your docs here. */
-public class GaniPower extends SubsystemBase {
+public class CollectorBalls extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   VictorSPX gSpx = null;
 
-  public GaniPower()
+  public CollectorBalls()
   {
     gSpx = new VictorSPX(6);
   }

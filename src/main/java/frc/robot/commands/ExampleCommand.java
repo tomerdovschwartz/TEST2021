@@ -10,10 +10,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.GaniPower;
+import frc.robot.subsystems.CollectorBalls;
+import frc.robot.subsystems.CollectorBalls;
 
 public class ExampleCommand extends CommandBase {
-  private GaniPower m_subsystem;
+  private CollectorBalls m_subsystem;
 
   /** Creates a new ExampleCommand. */
   public ExampleCommand(boolean btnPressed) {
@@ -45,7 +46,7 @@ public class ExampleCommand extends CommandBase {
     return false;
   }
 
-  public ExampleCommand(GaniPower subsystem) {
+  public ExampleCommand(CollectorBalls subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);

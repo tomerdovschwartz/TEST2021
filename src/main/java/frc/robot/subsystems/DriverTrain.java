@@ -92,10 +92,10 @@ public class DriverTrain extends SubsystemBase {
 
   public void ArcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
     xSpeed = limit(xSpeed, 1);
-    xSpeed = applyDeadband(xSpeed, 0.02);
+    xSpeed = applyDeadband(xSpeed, 0.1);
 
     zRotation = limit(zRotation, 1);
-    zRotation = applyDeadband(zRotation, 0.02);
+    zRotation = applyDeadband(zRotation, 0.1);
 
     // Square the inputs (while preserving the sign) to increase fine control
     // while permitting full power.

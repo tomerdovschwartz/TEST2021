@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.subsystems.GaniPower;
+import frc.robot.subsystems.CollectorBalls;
 
 public class TankDrive extends CommandBase {
   /** Creates a new TankDrive. */
