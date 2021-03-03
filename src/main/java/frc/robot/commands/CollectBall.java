@@ -10,16 +10,17 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.CollectorBalls;
+import frc.robot.RobotMap;
 import frc.robot.subsystems.CollectorBalls;
 
-public class ExampleCommand extends CommandBase {
+
+public class CollectBall extends CommandBase {
   private CollectorBalls m_subsystem;
 
   /** Creates a new ExampleCommand. */
-  public ExampleCommand(boolean btnPressed) {
+  public CollectBall(boolean btnPressed) {
     //Initalize the motor
-    VictorSPX gSpx = new VictorSPX(6);
+    VictorSPX gSpx = new VictorSPX(RobotMap.COLLECT_MASTER);
     //When the button is pressed it sets the speed to 0.35 otherwise it will set it to 0
     if(btnPressed){
       gSpx.set(ControlMode.PercentOutput, 0.35);
@@ -46,7 +47,7 @@ public class ExampleCommand extends CommandBase {
     return false;
   }
 
-  public ExampleCommand(CollectorBalls subsystem) {
+  public CollectBall(CollectorBalls subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);

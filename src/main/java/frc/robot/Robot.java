@@ -4,26 +4,35 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriverTrain;
+import frc.robot.subsystems.ShooterBalls;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
+ *  The VM is configured to automatically run
+ * this class, and to call the functions corresponding to each mode, as des
+ * ribed in the TimedRobot documentation. If you change the name of this class or
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
 
   public static DriverTrain driverTrain = new DriverTrain();
+  public static ShooterBalls shooterBall = new ShooterBalls();
 
   private Command m_autonomousCommand;
 
   public static OI m_oi;
 
-public static Object robotType;
+  public static Object robotType;
+   private Encoder encoder = new Encoder(0, 1, false, EncodingType.k4X);
+   private final double kDriveTick2Feet = 1.0 / 128 * 6 * Math.PI / 12;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -50,6 +59,8 @@ public static Object robotType;
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    
+    SmartDashboard.putNumber("encoder value", encoder.get() * kDriveTick2Feet);
     CommandScheduler.getInstance().run();
   }
 
@@ -63,16 +74,37 @@ public static Object robotType;
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    encoder.reset();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
   }
+  final double kP = 0.5;
+
+  double setpoint = 0;
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    // get joystick command
+    if (m_oi.joystick_controller.getRawButton(1)) {
+      setpoint = 5;
+    } else if (m_oi.joystick_controller.getRawButton(2)) {
+      setpoint = 0;
+    }
+
+    // get sensor position
+    double sensorPosition = encoder.get() * kDriveTick2Feet;
+
+    // calculations
+    double error = setpoint - sensorPosition;
+    double outputSpeed = kP * error;
+
+    // output to motors
+    //need to create subsystem to auto drive!!!
+  }
 
   @Override
   public void teleopInit() {

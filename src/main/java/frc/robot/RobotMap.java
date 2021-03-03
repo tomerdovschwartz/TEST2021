@@ -1,12 +1,6 @@
 package frc.robot;
 
 public class RobotMap {
-
-    public static final int MOTOR_LEFT_1_ID = 0;
-	public static final int MOTOR_LEFT_2_ID = 1;
-	public static final int MOTOR_RIGHT_1_ID = 2;
-    public static final int MOTOR_RIGHT_2_ID = 3;
-    
     public static final int DRIVER_CONTROLLER = 0;
     
     public static final int STICK_X = 0;
@@ -21,7 +15,13 @@ public class RobotMap {
     public static final int DRIVE_LEFT_MASTER = 0;
     public static final int DRIVE_LEFT_FOLLOW_ONE = 0;
     public static final int DRIVE_LEFT_FOLLOW_TWO = 1;
+    
+    public static final int SHOOT_MASTER=8;
+    public static final int SHOOT_FOLLOW_ONE=8;
+    public static final int SHOOT_FOLLOW_TWO=9;
 
+    public static final int COLLECT_MASTER=6;
+    
     public static final double PATH_MAX_SPEED = 4.572;
 
     public static final int USONIC_PIN = 0;
@@ -32,7 +32,6 @@ public class RobotMap {
 
     public static final int JOYSTICK_LEFT = 0;
     public static final int JOYSTICK_RIGHT = 1;
-    public static final int XBOX_CONTROLLER = 2;
 
     public static final int LIGHT_VOLTAGE = 0;
 
@@ -61,5 +60,5 @@ public class RobotMap {
 
     public static final double COUNTS_PER_METER = COUNTS_PER_INCH * (1 / 2.54) * 100.0;
     public static final double METERS_PER_COUNT = 1.0 / COUNTS_PER_METER;
-    public static final int GANI_POWER = 4;
+
 }

@@ -45,7 +45,7 @@ public class DriverTrain extends SubsystemBase {
   public DriverTrain() {
         double talon_P = 1.0D;
 
-        this.driveLeftMaster = new TalonSRX(RobotMap.MOTOR_LEFT_1_ID);
+        this.driveLeftMaster = new TalonSRX(RobotMap.DRIVE_LEFT_MASTER);
         this.driveLeftMaster.setNeutralMode(NeutralMode.Brake);
         this.driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
         this.driveLeftMaster.config_kP(0, talon_P, 10);

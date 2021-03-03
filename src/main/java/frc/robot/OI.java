@@ -7,9 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.CollectBall;
+import frc.robot.commands.ShootBall;
 
-/** Add your docs here. */
 public class OI {
 
     Joystick joystick_controller = new Joystick(RobotMap.DRIVER_CONTROLLER);
@@ -19,16 +19,22 @@ public class OI {
         return joystick_controller.getRawAxis(axis);
     }
 
-    public void GetButton() {
-        // joystick_controller.getRawButtonPressed(btnNumber) - get true or false if the
-        // button
-        // that is specificed is pressed
-        // joysticl_controller.getRawButtonReleased(btnNumber) - get true if the button
-        // is begin released.
+    // joystick_controller.getRawButtonPressed(btnNumber) - get true or false if the  button that is specificed is pressed
+    // joysticl_controller.getRawButtonReleased(btnNumber) - get true if the button is begin released.
+
+    public void CollectPress() {
+        
         if (joystick_controller.getRawButtonPressed(1)) {
-            button.whenPressed(new ExampleCommand(true));
+            button.whenPressed(new CollectBall (true));
         } else if (joystick_controller.getRawButtonReleased(1)) {
-            button.whenPressed(new ExampleCommand(false));
+            button.whenPressed(new CollectBall (false));
+        }
+    }
+    public void ShotPress() {
+        if (joystick_controller.getRawButtonPressed(2)) {
+            button.whenPressed(new ShootBall (true));
+        } else if (joystick_controller.getRawButtonReleased(2)) {
+            button.whenPressed(new ShootBall (false));
         }
     }
 
