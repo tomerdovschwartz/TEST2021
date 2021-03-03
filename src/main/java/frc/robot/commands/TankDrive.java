@@ -11,6 +11,7 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 import frc.robot.subsystems.CollectorBalls;
 
+
 public class TankDrive extends CommandBase {
   /** Creates a new TankDrive. */
   public TankDrive() {
@@ -28,7 +29,9 @@ public class TankDrive extends CommandBase {
   public void execute() {
     double xAxis = Robot.m_oi.GetDriverRawAxis(RobotMap.STICK_Y);
     double yAxis = Robot.m_oi.GetDriverRawAxis(RobotMap.STICK_X);
-    Robot.m_oi.GetButton();
+    
+    Robot.m_oi.CollectPress();
+    Robot.m_oi.ShotPress();
 
     Robot.driverTrain.ArcadeDrive(-xAxis, yAxis, true);
     SmartDashboard.putNumber("Joystick X Value", xAxis);
