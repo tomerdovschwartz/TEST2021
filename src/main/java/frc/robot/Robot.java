@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.DriverTrain;
@@ -75,6 +76,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     encoder.reset();
+    errorSum = 0;
+    lastError = 0;
+    lastTimestamp = Timer.getFPGATimestamp();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -82,28 +86,47 @@ public class Robot extends TimedRobot {
     }
   }
   final double kP = 0.5;
+  final double kI = 0.5;
+  final double kD = 0.1;
+  final double iLimit = 1;
 
   double setpoint = 0;
+  double errorSum = 0;
+  double lastTimestamp = 0;
+  double lastError = 0;
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
     // get joystick command
     if (m_oi.joystick_controller.getRawButton(1)) {
-      setpoint = 5;
+      setpoint = 3;
     } else if (m_oi.joystick_controller.getRawButton(2)) {
       setpoint = 0;
     }
 
-    // get sensor position
-    double sensorPosition = encoder.get() * kDriveTick2Feet;
+     // get sensor position
+     double sensorPosition = encoder.get() * kDriveTick2Feet;
 
-    // calculations
-    double error = setpoint - sensorPosition;
-    double outputSpeed = kP * error;
+     // calculations
+     double error = setpoint - sensorPosition;
+     double dt = Timer.getFPGATimestamp() - lastTimestamp;
+ 
+     if (Math.abs(error) < iLimit) {
+       errorSum += error * dt;
+     }
+ 
+     double errorRate = (error - lastError) / dt;
+ 
+     double outputSpeed = kP * error + kI * errorSum + kD * errorRate;
+ 
+     // output to motors
+    driverTrain.ArcadeDrive(outputSpeed, 0, true);
 
-    // output to motors
-    //need to create subsystem to auto drive!!!
+     // update last- variables
+     lastTimestamp = Timer.getFPGATimestamp();
+     lastError = error;
+    
   }
 
   @Override
