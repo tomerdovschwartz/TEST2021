@@ -10,21 +10,31 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.commands.TankDrive;
+import java.lang.Math;
 
 public class DriverTrain extends SubsystemBase {
-
+  /**
+   * Master Talon SRX, Left side.
+   */
   private TalonSRX driveLeftMaster;
   private MotionProfileStatus leftMpStatus;
   /**
    * Follower Talon SRX, left side.
    */
   private TalonSRX driveLeftFollowOne;
-  /**
-   * Additional follower Talon SRX, left side.
-   */
   private TalonSRX driveLeftFollowTwo;
 
   /**
@@ -36,15 +46,36 @@ public class DriverTrain extends SubsystemBase {
    * Follower Talon SRX, right side.
    */
   private TalonSRX driveRightFollowOne;
-  /**
-   * Additional follower Talon SRX, right side.
-   */
   private TalonSRX driveRightFollowTwo;
 
-  /** Creates a new DriverTrain. */
-  public DriverTrain() {
-        double talon_P = 1.0D;
+  
+  Gyro gyro = new ADXRS450_Gyro (SPI.Port.kMXP);
+  DifferentialDriveKinematics kinematics = new  DifferentialDriveKinematics(0.5);
+  DifferentialDriveOdometry  odometry = new DifferentialDriveOdometry (getHeading());
 
+  Pose2d pose;
+  
+  PIDController leftPIDController= new PIDController(1.0, 0, 0); 
+  PIDController rightPIDController= new PIDController(1.0, 0, 0); 
+/**NEED TO CHANGE!! with frc-characterization
+ Parameters:
+    kp The proportional coefficient.
+    ki The integral coefficient.
+    kd The derivative coefficient
+ */
+
+  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.3, 2);
+/**NEED TO CHANGE
+ * Parameters:
+    ks The static gain.  
+    kv The velocity gain.
+ */
+  
+
+/** Creates a new DriverTrain. */
+  public DriverTrain() {
+
+        double talon_P = 1.0D;
         this.driveLeftMaster = new TalonSRX(RobotMap.DRIVE_LEFT_MASTER);
         this.driveLeftMaster.setNeutralMode(NeutralMode.Brake);
         this.driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
@@ -85,15 +116,63 @@ public class DriverTrain extends SubsystemBase {
         this.driveRightFollowTwo.setNeutralMode(NeutralMode.Brake);
         this.driveRightFollowTwo.setInverted(true);
   }
-  @Override
-  public void periodic() {
-    setDefaultCommand(new TankDrive());
-  }
+  
+    public Rotation2d getHeading() {
+        return Rotation2d.fromDegrees(-gyro.getAngle());
+    }
+    
+    public DifferentialDriveWheelSpeeds getSpeeds()
+    {
+        return new DifferentialDriveWheelSpeeds(
+            driveLeftMaster.getSelectedSensorVelocity()*RobotMap.RADIUS_WHELL*2*Math.PI*10/RobotMap.kSensorUnitsPerRotation,
+            driveRightMaster.getSelectedSensorVelocity()*RobotMap.RADIUS_WHELL*2*Math.PI*10/RobotMap.kSensorUnitsPerRotation
+            );
+    /**
+     * VelocitySensor=100[units/ms]
+     * 100[ms]=0.1[sec]=1/600[min]
+     * RPM[round/minute]=(VelocitySensor*600)/ kSensorUnitsPerRotation
+     * w[angular velocity rad/s]=(2*pi*RPM)/60
+     * v[linear velocity m/s]=w*WheelRadius
+    */
+    }
+
+    public PIDController getLeftPIDController(){
+        return leftPIDController;
+    }
+    public PIDController getRightPIDController(){
+        return rightPIDController;
+    }
+
+    public DifferentialDriveKinematics getKinematics (){
+        return kinematics;
+    }
+
+    public Pose2d getPose(){
+        return pose;
+    }
+
+    public SimpleMotorFeedforward getFeedForward(){
+        return feedforward;
+    }
+
+    public void setOutput(double leftVolts,double rightVolts){
+        driveLeftMaster.set(ControlMode.PercentOutput, leftVolts/RobotMap.MAX_VOLT);
+        driveRightMaster.set(ControlMode.PercentOutput,rightVolts/RobotMap.MAX_VOLT);
+    }
+
+    @Override
+    public void periodic() {
+        pose=odometry.update(getHeading(),getSpeeds().leftMetersPerSecond,getSpeeds().rightMetersPerSecond);
+        setDefaultCommand(new TankDrive());
+       
+    }
+
+  
+  
 
   public void ArcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
     xSpeed = limit(xSpeed, 1);
     xSpeed = applyDeadband(xSpeed, 0.1);
-
     zRotation = limit(zRotation, 1);
     zRotation = applyDeadband(zRotation, 0.1);
 

@@ -1,8 +1,31 @@
 package frc.robot;
 
 public class RobotMap {
-    public static final int DRIVER_CONTROLLER = 0;
+    /**
+	 * How many sensor units per rotation.
+	 * Using CTRE Magnetic Encoder.
+	 * @link https://github.com/CrossTheRoadElec/Phoenix-Documentation#what-are-the-units-of-my-sensor
+	 */
+    public final static int kSensorUnitsPerRotation = 4096;
+
+	/**
+	 * Using the configSelectedFeedbackCoefficient() function, scale units to 3600 per rotation.
+	 * This is nice as it keeps 0.1 degrees of resolution, and is fairly intuitive.
+	 */
+	public final static double kTurnTravelUnitsPerRotation = 3600;
+	
+	/**
+	 * Empirically measure what the difference between encoders per 360'
+	 * Drive the robot in clockwise rotations and measure the units per rotation.
+	 * Drive the robot in counter clockwise rotations and measure the units per rotation.
+	 * Take the average of the two.
+	 */
+	public final static int kEncoderUnitsPerRotation = 51711;
     
+    public final static double RADIUS_WHELL=0.1;
+    public final static int MAX_VOLT=12;
+
+    public static final int DRIVER_CONTROLLER = 0;
     public static final int STICK_X = 0;
 	public static final int STICK_Y = 1;
 	public static final int STICK_Z = 2;

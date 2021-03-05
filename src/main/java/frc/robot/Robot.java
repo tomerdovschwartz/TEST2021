@@ -24,16 +24,14 @@ import edu.wpi.first.wpilibj.CounterBase.EncodingType;
  */
 public class Robot extends TimedRobot {
 
+  RobotContainer container;
   public static DriverTrain driverTrain = new DriverTrain();
   public static ShooterBalls shooterBall = new ShooterBalls();
-
   private Command m_autonomousCommand;
-
   public static OI m_oi;
-
   public static Object robotType;
-   private Encoder encoder = new Encoder(0, 1, false, EncodingType.k4X);
-   private final double kDriveTick2Feet = 1.0 / 128 * 6 * Math.PI / 12;
+  private Encoder encoder = new Encoder(0, 1, false, EncodingType.k4X);
+  private final double kDriveTick2Feet = 1.0 / 128 * 6 * Math.PI / 12;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -43,7 +41,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-
+    container=new RobotContainer();
     m_oi = new OI();
   }
 
@@ -75,59 +73,16 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    encoder.reset();
-    errorSum = 0;
-    lastError = 0;
-    lastTimestamp = Timer.getFPGATimestamp();
-
-    // schedule the autonomous command (example)
+    m_autonomousCommand = container.getAutonomousCommand();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
   }
-  final double kP = 0.5;
-  final double kI = 0.5;
-  final double kD = 0.1;
-  final double iLimit = 1;
-
-  double setpoint = 0;
-  double errorSum = 0;
-  double lastTimestamp = 0;
-  double lastError = 0;
-
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    // get joystick command
-    if (m_oi.joystick_controller.getRawButton(1)) {
-      setpoint = 3;
-    } else if (m_oi.joystick_controller.getRawButton(2)) {
-      setpoint = 0;
+    CommandScheduler.getInstance().run();
     }
-
-     // get sensor position
-     double sensorPosition = encoder.get() * kDriveTick2Feet;
-
-     // calculations
-     double error = setpoint - sensorPosition;
-     double dt = Timer.getFPGATimestamp() - lastTimestamp;
- 
-     if (Math.abs(error) < iLimit) {
-       errorSum += error * dt;
-     }
- 
-     double errorRate = (error - lastError) / dt;
- 
-     double outputSpeed = kP * error + kI * errorSum + kD * errorRate;
- 
-     // output to motors
-    driverTrain.ArcadeDrive(outputSpeed, 0, true);
-
-     // update last- variables
-     lastTimestamp = Timer.getFPGATimestamp();
-     lastError = error;
-    
-  }
 
   @Override
   public void teleopInit() {
@@ -143,7 +98,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
+    SmartDashboard.putNumber("Position in X :", driverTrain.getPose().getX());
+    SmartDashboard.putNumber("Position in Y :", driverTrain.getPose().getY());
     CommandScheduler.getInstance().run();
   }
 
