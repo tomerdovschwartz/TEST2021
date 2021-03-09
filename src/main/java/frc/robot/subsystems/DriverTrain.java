@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
@@ -48,8 +49,8 @@ public class DriverTrain extends SubsystemBase {
   private TalonSRX driveRightFollowOne;
   private TalonSRX driveRightFollowTwo;
 
-  
-  Gyro gyro = new ADXRS450_Gyro (SPI.Port.kMXP);
+ // Gyro gyro = new ADXRS450_Gyro (SPI.Port.kMXP);
+AnalogGyro gyro = new AnalogGyro(1);
   DifferentialDriveKinematics kinematics = new  DifferentialDriveKinematics(0.5);
   DifferentialDriveOdometry  odometry = new DifferentialDriveOdometry (getHeading());
 
@@ -175,6 +176,7 @@ public class DriverTrain extends SubsystemBase {
     xSpeed = applyDeadband(xSpeed, 0.1);
     zRotation = limit(zRotation, 1);
     zRotation = applyDeadband(zRotation, 0.1);
+
 
     // Square the inputs (while preserving the sign) to increase fine control
     // while permitting full power.

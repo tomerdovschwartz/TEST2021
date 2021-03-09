@@ -24,7 +24,7 @@ import frc.robot.subsystems.DriverTrain;
 /** Add your docs here. */
 public class RobotContainer {
 
-private DriverTrain drive = new DriverTrain();
+private DriverTrain drive;
     
 public Command getAutonomousCommand(){
     TrajectoryConfig config = new TrajectoryConfig(3.0,1.0);
