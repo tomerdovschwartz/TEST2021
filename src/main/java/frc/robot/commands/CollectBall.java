@@ -3,31 +3,20 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
-import java.util.concurrent.TimeUnit;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotMap;
+import frc.robot.OI;
 import frc.robot.subsystems.CollectorBalls;
+import frc.robot.subsystems.DriverTrain;
 
 
 public class CollectBall extends CommandBase {
-  private CollectorBalls m_subsystem;
-
-  /** Creates a new ExampleCommand. */
-  public CollectBall(boolean btnPressed) {
-    //Initalize the motor
-    VictorSPX gSpx = new VictorSPX(RobotMap.COLLECT_MASTER);
-    //When the button is pressed it sets the speed to 0.35 otherwise it will set it to 0
-    if(btnPressed){
-      gSpx.set(ControlMode.PercentOutput, 0.35);
-    }else{
-      gSpx.set(ControlMode.PercentOutput, 0);
-    }
+  private CollectorBalls m_collectorballs;
+  /** Creates a new ShootBall. */
+  public CollectBall(CollectorBalls collectorballs) {
+    m_collectorballs=collectorballs;
+    addRequirements(m_collectorballs);
   }
+ 
 
   // Called when the command is initially scheduled.
   @Override
@@ -35,7 +24,9 @@ public class CollectBall extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_collectorballs.startCollect();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -44,12 +35,8 @@ public class CollectBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (new OI().getJoystick().getRawButtonReleased(1));
   }
 
-  public CollectBall(CollectorBalls subsystem) {
-    m_subsystem = subsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
-  }
+  
 }

@@ -39,30 +39,22 @@ public class RobotMap {
     public static final int DRIVE_LEFT_FOLLOW_ONE = 0;
     public static final int DRIVE_LEFT_FOLLOW_TWO = 1;
     
-    public static final int SHOOT_MASTER=8;
-    public static final int SHOOT_FOLLOW_ONE=8;
-    public static final int SHOOT_FOLLOW_TWO=9;
+
+    public static final int GRAB_MASTER=8;
+    public static final int SHOOT_MASTER=9;
+    
 
     public static final int COLLECT_MASTER=6;
+
+    public static final int CHANGEDIRECTION_MASTER=7;
     
     public static final double PATH_MAX_SPEED = 4.572;
 
-    public static final int USONIC_PIN = 0;
-
-    public static final int ROLLER_LEFT = 4;
-    public static final int ROLLER_RIGHT = 5;
-    public static final int ROLLER_PISTON = 4;
 
     public static final int JOYSTICK_LEFT = 0;
     public static final int JOYSTICK_RIGHT = 1;
 
     public static final int LIGHT_VOLTAGE = 0;
-
-    public static final int RIGHT_RAMP_FORWARD = 0;
-    public static final int RIGHT_RAMP_REVERSE = 1;
-    public static final int LEFT_RAMP_FORWARD = 2;
-    public static final int LEFT_RAMP_REVERSE = 3;
-    public static final int RAMP_WINCH = 11;
 
     public static final int RAMP_CLAW_FORWARD = 5;
     public static final int RAMP_CLAW_REVERSE = 6;

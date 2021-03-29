@@ -9,39 +9,41 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.OI;
 import frc.robot.RobotMap;
 
 public class ShooterBalls extends SubsystemBase {
-  VictorSPX gSpx_ShootMaster=null;
-  VictorSPX gSpx_ShootFollowOne = null;
-  VictorSPX gSpx_ShootFollowTwo = null;
+  private VictorSPX gSpx_GrabMaster = null;
+  private VictorSPX gSpx_ShootMaster = null;
 
   public ShooterBalls() {
   this.gSpx_ShootMaster = new VictorSPX(RobotMap.SHOOT_MASTER);
   this.gSpx_ShootMaster.setNeutralMode(NeutralMode.Brake);
 
-  this.gSpx_ShootFollowOne = new VictorSPX(RobotMap.SHOOT_FOLLOW_ONE);
-  this.gSpx_ShootFollowOne.set(ControlMode.Follower, RobotMap.SHOOT_FOLLOW_ONE);
-  this.gSpx_ShootFollowOne.setNeutralMode(NeutralMode.Brake);
-
-  this.gSpx_ShootFollowTwo = new VictorSPX(RobotMap.SHOOT_FOLLOW_TWO);
-  this.gSpx_ShootFollowTwo.set(ControlMode.Follower,RobotMap.SHOOT_MASTER);
-  this.gSpx_ShootFollowTwo.setNeutralMode(NeutralMode.Brake);
+  this.gSpx_GrabMaster = new VictorSPX(RobotMap.GRAB_MASTER);
+  this.gSpx_GrabMaster.setNeutralMode(NeutralMode.Brake);
 
   }
-  public void startShoot(boolean on)
-  {
-    if (on){
-    gSpx_ShootMaster.set(ControlMode.PercentOutput, 0.5);
+  public void startShoot(){
+  
+    if (new OI().getJoystick().getRawButton(2)){
+    gSpx_ShootMaster.set(ControlMode.PercentOutput, 1); 
     }
     else{
       gSpx_ShootMaster.set(ControlMode.PercentOutput, 0);
     }
-
+  }
+  public void startGrab(){
+    if (new OI().getJoystick().getRawButton(3)){
+      gSpx_GrabMaster.set(ControlMode.PercentOutput, 0.7); 
+    }
+    else{
+      gSpx_GrabMaster.set(ControlMode.PercentOutput, 0);
+    }
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    
   }
 }

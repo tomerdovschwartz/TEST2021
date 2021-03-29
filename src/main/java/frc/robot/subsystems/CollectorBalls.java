@@ -3,8 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.OI;
 import frc.robot.RobotMap;
 
 
@@ -12,10 +14,26 @@ import frc.robot.RobotMap;
 public class CollectorBalls extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  VictorSPX gSpx = null;
+  private VictorSPX gSpx_CollectMaster = null;
+  int velocity=1;
 
   public CollectorBalls()
   {
-    gSpx = new VictorSPX(RobotMap.COLLECT_MASTER);
+   gSpx_CollectMaster = new VictorSPX(RobotMap.COLLECT_MASTER);
   }
+
+  public void startCollect(){
+    velocity=1;
+  if (new OI().getJoystick().getRawButton(7))
+  velocity=-1;
+
+    if (new OI().getJoystick().getRawButton(1)){
+      gSpx_CollectMaster.set(ControlMode.PercentOutput, 0.35*velocity);
+
+    }
+    else{
+      gSpx_CollectMaster.set(ControlMode.PercentOutput, 0);
+  }
+
+}
 }

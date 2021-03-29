@@ -4,15 +4,14 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -21,9 +20,12 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.commands.TankDrive;
+import frc.robot.commands.StartJoystickArcadeDrive;
 import java.lang.Math;
 
 public class DriverTrain extends SubsystemBase {
@@ -31,7 +33,6 @@ public class DriverTrain extends SubsystemBase {
    * Master Talon SRX, Left side.
    */
   private TalonSRX driveLeftMaster;
-  private MotionProfileStatus leftMpStatus;
   /**
    * Follower Talon SRX, left side.
    */
@@ -42,20 +43,21 @@ public class DriverTrain extends SubsystemBase {
    * Master Talon SRX, right side.
    */
   private TalonSRX driveRightMaster;
-  private MotionProfileStatus rightMpStatus;
   /**
    * Follower Talon SRX, right side.
    */
   private TalonSRX driveRightFollowOne;
   private TalonSRX driveRightFollowTwo;
-
- // Gyro gyro = new ADXRS450_Gyro (SPI.Port.kMXP);
-AnalogGyro gyro = new AnalogGyro(1);
-  DifferentialDriveKinematics kinematics = new  DifferentialDriveKinematics(0.5);
-  DifferentialDriveOdometry  odometry = new DifferentialDriveOdometry (getHeading());
-
-  Pose2d pose;
   
+  private static final SPI.Port kGyroPort = SPI.Port.kOnboardCS0;
+  private ADXRS450_Gyro gyro = new ADXRS450_Gyro(kGyroPort);
+  
+   DifferentialDriveKinematics kinematics = new  DifferentialDriveKinematics(0.5);
+   DifferentialDriveOdometry  odometry = new DifferentialDriveOdometry (getHeading());
+
+   private Pose2d pose;
+  
+   
   PIDController leftPIDController= new PIDController(1.0, 0, 0); 
   PIDController rightPIDController= new PIDController(1.0, 0, 0); 
 /**NEED TO CHANGE!! with frc-characterization
@@ -79,13 +81,9 @@ AnalogGyro gyro = new AnalogGyro(1);
         double talon_P = 1.0D;
         this.driveLeftMaster = new TalonSRX(RobotMap.DRIVE_LEFT_MASTER);
         this.driveLeftMaster.setNeutralMode(NeutralMode.Brake);
-        this.driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+        this.driveLeftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
         this.driveLeftMaster.config_kP(0, talon_P, 10);
         this.driveLeftMaster.config_kF(0, 1 / (RobotMap.PATH_MAX_SPEED * RobotMap.COUNTS_PER_METER * 4.0 * (1.0 / 10.0)), 10);
-
-        this.driveLeftMaster.clearMotionProfileTrajectories();
-        this.driveLeftMaster.changeMotionControlFramePeriod(25);
-        this.leftMpStatus = new MotionProfileStatus();
 
         this.driveLeftFollowOne = new TalonSRX(RobotMap.DRIVE_LEFT_FOLLOW_ONE);
         this.driveLeftFollowOne.set(ControlMode.Follower, RobotMap.DRIVE_LEFT_MASTER);
@@ -97,15 +95,11 @@ AnalogGyro gyro = new AnalogGyro(1);
 
         this.driveRightMaster = new TalonSRX(RobotMap.DRIVE_RIGHT_MASTER);
         this.driveRightMaster.setNeutralMode(NeutralMode.Brake);
-        this.driveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+        this.driveRightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
         this.driveRightMaster.config_kP(0, talon_P, 10);
         this.driveRightMaster.config_kF(0, 1 / (RobotMap.PATH_MAX_SPEED * RobotMap.COUNTS_PER_METER * 4.0 * (1.0 / 10.0)), 10);
         this.driveRightMaster.setInverted(true);
         this.driveRightMaster.setSensorPhase(true);
-
-        this.driveRightMaster.clearMotionProfileTrajectories();
-        this.driveRightMaster.changeMotionControlFramePeriod(25);
-        this.rightMpStatus = new MotionProfileStatus();
 
         this.driveRightFollowOne = new TalonSRX(RobotMap.DRIVE_RIGHT_FOLLOW_ONE);
         this.driveRightFollowOne.set(ControlMode.Follower, RobotMap.DRIVE_RIGHT_MASTER);
@@ -115,9 +109,14 @@ AnalogGyro gyro = new AnalogGyro(1);
         this.driveRightFollowTwo = new TalonSRX(RobotMap.DRIVE_RIGHT_FOLLOW_TWO);
         this.driveRightFollowTwo.set(ControlMode.Follower, RobotMap.DRIVE_RIGHT_MASTER);
         this.driveRightFollowTwo.setNeutralMode(NeutralMode.Brake);
-        this.driveRightFollowTwo.setInverted(true);
+        this.driveRightFollowTwo.setInverted(true);       
   }
-  
+
+    @Override
+    public void periodic() {
+       setDefaultCommand(new StartJoystickArcadeDrive(Robot.driverTrain));
+    }
+    
     public Rotation2d getHeading() {
         return Rotation2d.fromDegrees(-gyro.getAngle());
     }
@@ -156,22 +155,29 @@ AnalogGyro gyro = new AnalogGyro(1);
         return feedforward;
     }
 
+    public  ADXRS450_Gyro getGyro(){
+        return gyro;
+    }
+
     public void setOutput(double leftVolts,double rightVolts){
-        driveLeftMaster.set(ControlMode.PercentOutput, leftVolts/RobotMap.MAX_VOLT);
-        driveRightMaster.set(ControlMode.PercentOutput,rightVolts/RobotMap.MAX_VOLT);
+        driveLeftMaster.set(ControlMode.PercentOutput, limit(leftVolts/12.0, 1));
+        driveRightMaster.set(ControlMode.PercentOutput, limit(rightVolts/12.0, 1));
     }
 
-    @Override
-    public void periodic() {
-        pose=odometry.update(getHeading(),getSpeeds().leftMetersPerSecond,getSpeeds().rightMetersPerSecond);
-        setDefaultCommand(new TankDrive());
-       
-    }
 
-  
-  
-
+    
   public void ArcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
+   pose=odometry.update(getHeading(),getSpeeds().leftMetersPerSecond,getSpeeds().rightMetersPerSecond);
+
+//    Shuffleboard.getTab("getSpeeds").add((Sendable) getSpeeds());
+//    Shuffleboard.getTab("Pose").add((Sendable) getPose());
+//    Shuffleboard.getTab("GetHeading").add((Sendable) getHeading());
+    //Shuffleboard.getTab("Example tab1").add((Sendable) gyro);
+  
+    // SmartDashboard.putNumber("angle1", gyro.getAngle());
+    //  SmartDashboard.putNumber("angle2", gyro.getRate());
+    //  SmartDashboard.putNumber("angle3", gyro.getRotation2d().getDegrees());
+
     xSpeed = limit(xSpeed, 1);
     xSpeed = applyDeadband(xSpeed, 0.1);
     zRotation = limit(zRotation, 1);

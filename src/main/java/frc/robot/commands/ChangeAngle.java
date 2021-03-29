@@ -4,36 +4,26 @@
 
 package frc.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.robot.OI;
-import frc.robot.Robot;
-import frc.robot.subsystems.DriverTrain;
-import frc.robot.subsystems.ShooterBalls;
+import frc.robot.subsystems.ChangeAngleDirection;
 
-public class ShootBall extends CommandBase {
-  private ShooterBalls m_shooterballs;
+public class ChangeAngle extends CommandBase {
+  private ChangeAngleDirection m_changeangkedirection;
   /** Creates a new ShootBall. */
-  public ShootBall(ShooterBalls shooterballs) {
-    m_shooterballs=shooterballs;
-    addRequirements(m_shooterballs);
+  public ChangeAngle(ChangeAngleDirection changeangkedirection) {
+    m_changeangkedirection=changeangkedirection;
+    addRequirements(m_changeangkedirection);
   }
  
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooterballs.startShoot();
-    m_shooterballs.startGrab();
+    m_changeangkedirection.startChangeDirection();
   }
 
   // Called once the command ends or is interrupted.
@@ -45,5 +35,6 @@ public class ShootBall extends CommandBase {
   public boolean isFinished() {
     return false;
   }
+
   
 }
