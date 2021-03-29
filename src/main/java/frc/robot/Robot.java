@@ -127,7 +127,7 @@ public class Robot extends TimedRobot {
   public void autonomousPeriodic() {
     
     CommandScheduler.getInstance().run();
-    driverTrain.ArcadeDrive(1, 0, true);
+    driverTrain.ArcadeDrive(-0.2, 0.65, true);
     // if(Math.abs(gyro.getAngle())<=10){
     //   driverTrain.setOutput(leftslow-(gyro.getAngle())/15, rightslow-(gyro.getAngle())/15);
     //   }else
