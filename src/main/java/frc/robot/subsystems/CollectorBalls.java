@@ -28,7 +28,7 @@ public class CollectorBalls extends SubsystemBase {
   velocity=-1;
 
     if (new OI().getJoystick().getRawButton(1)){
-      gSpx_CollectMaster.set(ControlMode.PercentOutput, 0.35*velocity);
+      gSpx_CollectMaster.set(ControlMode.PercentOutput, 0.45*velocity);
 
     }
     else{

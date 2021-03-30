@@ -1,5 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 public class RobotMap {
     /**
 	 * How many sensor units per rotation.
@@ -75,5 +79,10 @@ public class RobotMap {
 
     public static final double COUNTS_PER_METER = COUNTS_PER_INCH * (1 / 2.54) * 100.0;
     public static final double METERS_PER_COUNT = 1.0 / COUNTS_PER_METER;
+
+    public static final DifferentialDriveKinematics kinematics = new  DifferentialDriveKinematics(0.5);
+    public static final PIDController leftPIDController= new PIDController(1.0, 1, 0); 
+    public static final  PIDController rightPIDController= new PIDController(1.0, 1, 0); 
+    public static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.3, 2);
 
 }
