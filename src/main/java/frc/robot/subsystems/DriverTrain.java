@@ -6,9 +6,13 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.fasterxml.jackson.core.sym.Name;
+
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -16,6 +20,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
@@ -53,11 +58,13 @@ public class DriverTrain extends SubsystemBase {
   PIDController leftPIDController= new PIDController(8.5, 0, 0); 
   PIDController rightPIDController= new PIDController(8.5, 0, 0); 
 
-  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.22,1.98,0.2);
+  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.22,1.98,0.2);;
 
+  
 
 /** Creates a new DriverTrain. */
   public DriverTrain() {
+    
         double talon_P = 1.0D;
         this.driveLeftMaster = new TalonSRX(RobotMap.DRIVE_LEFT_MASTER);
         this.driveLeftMaster.setNeutralMode(NeutralMode.Brake);
@@ -104,6 +111,10 @@ public class DriverTrain extends SubsystemBase {
             fx.configNominalOutputReverse(0);
             fx.configPeakOutputForward(1);
             fx.configPeakOutputReverse(-1);
+            fx.configPeakCurrentLimit(30); // don't activate current limit until current exceeds 30 A ...
+            fx.configPeakCurrentDuration(100); // ... for at least 100 ms
+            fx.configContinuousCurrentLimit(20); // once current-limiting is actived, hold at 20A
+            fx.enableCurrentLimit(true);
 
             fx.configOpenloopRamp(0.1);
 
@@ -127,13 +138,11 @@ public class DriverTrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-
      pose=odometry.update(getHeading(),getSpeeds().leftMetersPerSecond,getSpeeds().rightMetersPerSecond);
-     
-     SmartDashboard.putNumber("getPose() X:", getPose().getX());
-     SmartDashboard.putNumber("getPose() Y:", getPose().getY());
-     SmartDashboard.putNumber("getSpeeds() leftMetersPerSecond", getSpeeds().leftMetersPerSecond);
-     SmartDashboard.putNumber("getSpeeds() rightMetersPerSecondMetersPerSecond", getSpeeds().rightMetersPerSecond);
+    //  SmartDashboard.putNumber("getPose() X:", getPose().getX());
+    //  SmartDashboard.putNumber("getPose() Y:", getPose().getY());
+    //  SmartDashboard.putNumber("getSpeeds() leftMetersPerSecond", getSpeeds().leftMetersPerSecond);
+    //  SmartDashboard.putNumber("getSpeeds() rightMetersPerSecondMetersPerSecond", getSpeeds().rightMetersPerSecond);
     
     }
     
@@ -180,14 +189,26 @@ public class DriverTrain extends SubsystemBase {
     }
 
     public void setOutputVolatage(double leftVolts,double rightVolts){
+        leftVolts = FixVolt(leftVolts);
+        rightVolts = FixVolt(rightVolts);
+        System.out.println("Left Volts: leftVolts "+leftVolts+"Right Volts: rightVolts "+rightVolts);
         driveLeftMaster.set(ControlMode.PercentOutput, leftVolts/12);
         driveRightMaster.set(ControlMode.PercentOutput, rightVolts/12);
-   
     }
-   
+
+    public double FixVolt(double Volt){
+        if(Volt<6)
+        Volt=0;
+
+        Volt=Math.round(Math.abs(Volt));
+        
+        if (Volt>12)
+        Volt=12;
+
+        return Volt;
+    }
     
   public void ArcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
-    SmartDashboard.putNumber("TEST()", gyro.getAngle());
     xSpeed = limit(xSpeed, 1);
     xSpeed = applyDeadband(xSpeed, 0.1);
     zRotation = limit(zRotation, 1);
@@ -229,6 +250,53 @@ public class DriverTrain extends SubsystemBase {
     driveRightMaster.set(ControlMode.PercentOutput, limit(rightMotorOutput, 1));
     
   }
+
+  public void DriveByRecorde (double [] cordinateX, double [] cordinateY,String NamePath,Boolean NEEDBALL){
+    double startTimedrive ;
+    int [] GrabON=null ;
+    int [] CollectON=null ;
+
+    switch(NamePath){
+        case "GalacticSearch_PathA_RED":
+        GrabON=RobotMap.GalacticSearch_PathA_RED_Grab;
+        CollectON=RobotMap.GalacticSearch_PathA_RED_Collect;
+
+        case "GalacticSearch_PathA_BLUE":
+         GrabON=RobotMap.GalacticSearch_PathA_BLUE_Grab;
+        CollectON=RobotMap.GalacticSearch_PathA_BLUE_Collect;
+  
+        case "GalacticSearch_PathB_RED":
+        GrabON=RobotMap.GalacticSearch_PathB_RED_Grab;
+        CollectON=RobotMap.GalacticSearch_PathB_RED_Collect;
+  
+        case "GalacticSearch_PathB_BLUE":
+        GrabON=RobotMap.GalacticSearch_PathB_BLUE_Grab;
+        CollectON=RobotMap.GalacticSearch_PathB_BLUE_Collect;
+    }
+  
+    for (int i=0; i< cordinateX.length; i++){
+        startTimedrive = Timer.getFPGATimestamp();
+            ArcadeDrive(-cordinateY[i], cordinateX[i], true);
+            if(NEEDBALL)
+            {
+                if(GrabON[i]==1)
+                new ShooterBalls().startGrab();
+                else
+                new ShooterBalls().stopGrab();
+
+                if(CollectON[i]==1)
+                new CollectorBalls().startCollect();
+                else
+                new CollectorBalls().stopCollect();
+                
+            }
+            while((Timer.getFPGATimestamp()-startTimedrive)<0.09){
+                
+            }
+           System.out.println("y:"+-cordinateY[i]+" x: "+cordinateX[i]+" GRAB "+GrabON[i]+" COLLECT "+CollectON[i]);
+        }
+    }
+  
 
   public static double limit(double num, double bound) {
     bound = Math.abs(bound);

@@ -85,4 +85,91 @@ public class RobotMap {
     public static final  PIDController rightPIDController= new PIDController(1.0, 1, 0); 
     public static final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.3, 2);
 
+    public static boolean GrabWorkKey=false;
+    public static boolean ShotWorkKey=false;
+    public static boolean CollectWorkKey=false;
+
+    //-----------------------------Galactic Search A RED---------------------------------------------//
+    public static final double GalacticSearch_PathA_RED_Xcord [] = {
+        
+    };
+    public static final double GalacticSearch_PathA_RED_Ycord [] ={
+     
+    };
+    public static final int GalacticSearch_PathA_RED_Collect [] ={
+     
+    };
+    public static final int GalacticSearch_PathA_RED_Grab [] ={
+     
+    };
+    //-----------------------------Galactic Search A BLUE---------------------------------------------//
+    public static final double GalacticSearch_PathA_BLUE_Xcord [] = {
+        
+    };
+    public static final double GalacticSearch_PathA_BLUE_Ycord [] ={
+     
+    };
+    public static final int GalacticSearch_PathA_BLUE_Collect [] ={
+     
+    };
+    public static final int GalacticSearch_PathA_BLUE_Grab [] ={
+     
+    };
+    
+    
+    //-----------------------------Galactic Search B RED---------------------------------------------//
+    public static final double GalacticSearch_PathB_RED_Xcord [] = {
+        
+    };
+    public static final double GalacticSearch_PathB_RED_Ycord [] ={
+     
+    };
+    public static final int GalacticSearch_PathB_RED_Collect [] ={
+     
+    };
+    public static final int GalacticSearch_PathB_RED_Grab [] ={
+     
+    };
+    //-----------------------------Galactic Search B BLUE---------------------------------------------//
+    public static final double GalacticSearch_PathB_BLUE_Xcord [] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.300000012, 0.600000083, 0.600000083, 0.300000012, 7.45E-09, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+        
+    };
+    public static final double GalacticSearch_PathB_BLUE_Ycord [] ={0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -0.150000006, -0.450000048, -0.750000119, -1, -1, -1, -1, -0.699999928, -0.399999857, -0.099999845, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -0.25, -0.550000072, -0.850000143, -0.899999976, -0.599999905, -0.299999833, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -0.200000003, -0.50000006, -0.800000131, -1, -0.699999928, -0.399999857, -0.099999845, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+     
+    };
+  
+    public static final int GalacticSearch_PathB_BLUE_Collect [] ={0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+     
+    };
+    public static final int GalacticSearch_PathB_BLUE_Grab [] ={0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+     
+    };
+    //-----------------------------AutoNav Challenge Barrel Racing---------------------------------------------//
+    public static final double AutoNavChallenge_PathBarrelRacing_Xcord [] = {
+        
+    };
+    public static final double AutoNavChallenge_PathBarrelRacing_Ycord [] = {
+        
+    };
+    //-----------------------------AutoNav Challenge Slalom---------------------------------------------//
+    public static final double AutoNavChallenge_PathSlalom_Xcord [] = {
+        
+    };
+    public static final double AutoNavChallenge_PathSlalom_Ycord [] = {
+        
+        
+    };
+    //-----------------------------AutoNav Challenge Barrel Bounce---------------------------------------------//
+    public static final double AutoNavChallenge_PathBounce_Xcord [] = {
+        
+    };
+    public static final double AutoNavChallenge_PathBounce_Ycord [] = {
+        
+    };
+    
+    
 }

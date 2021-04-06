@@ -4,15 +4,15 @@
 
 package frc.robot.commands;
 
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.OI;
 import frc.robot.subsystems.ShooterBalls;
 
-public class ShootBall extends CommandBase {
+public class GrabBall extends CommandBase {
+  /** Creates a new GrabBall. */
   private ShooterBalls m_shooterballs;
-  /** Creates a new ShootBall. */
-  public ShootBall(ShooterBalls shooterballs) {
+  public GrabBall(ShooterBalls shooterballs) {
     m_shooterballs=shooterballs;
     addRequirements(m_shooterballs);
   }
@@ -27,7 +27,8 @@ public class ShootBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
 @Override
   public void execute() {
-    m_shooterballs.startShoot();
+    m_shooterballs.startGrab();
+    
   
   }
 
@@ -35,12 +36,13 @@ public class ShootBall extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooterballs.stopShot();
+    m_shooterballs.stopGrab();
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-  return !(new OI().getJoystick().getRawButton(3));
+  return !(new OI().getJoystick().getRawButton(2));
   }
 }

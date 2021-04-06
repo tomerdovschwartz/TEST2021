@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ChangeAngle;
 import frc.robot.commands.CollectBall;
+import frc.robot.commands.GrabBall;
 import frc.robot.commands.RamseteTrajectoryCommand;
 import frc.robot.commands.ShootBall;
 import frc.robot.subsystems.ChangeAngleDirection;
@@ -49,7 +50,15 @@ public class RobotContainer {
    private final SendableChooser<AutoType> m_autoChooser;
 
    public enum AutoType{
-     DO_NOTHING, S_Path, Straight_Path, Mission_Path;
+     DO_NOTHING, 
+     GalacticSearch_PathA_RED, 
+     GalacticSearch_PathA_BLUE, 
+     GalacticSearch_PathB_RED, 
+     GalacticSearch_PathB_BLUE,
+     AutoNavChallenge_PathBarrelRacing, 
+     AutoNavChallenge_PathSlalom, 
+     AutoNavChallenge_PathBounce;
+     
    }
  
 
@@ -57,9 +66,13 @@ public RobotContainer() {
 
   m_autoChooser = new SendableChooser<>();
   m_autoChooser.setDefaultOption("Do Nothing", AutoType.DO_NOTHING);
-  m_autoChooser.addOption("S Path", AutoType.S_Path);
-  m_autoChooser.addOption("Straight Path", AutoType.Straight_Path);
-  m_autoChooser.addOption("Mission Path", AutoType.Mission_Path);
+  m_autoChooser.addOption("GalacticSearch PathA RED", AutoType.GalacticSearch_PathA_RED);
+  m_autoChooser.addOption("GalacticSearch PathA BLUE", AutoType.GalacticSearch_PathA_BLUE);
+  m_autoChooser.addOption("GalacticSearch PathB RED", AutoType. GalacticSearch_PathB_RED);
+  m_autoChooser.addOption("GalacticSearch PathB BLUE", AutoType.GalacticSearch_PathB_BLUE);
+  m_autoChooser.addOption("AutoNavChallenge Path BarrelRacing", AutoType.AutoNavChallenge_PathBarrelRacing);
+  m_autoChooser.addOption("AutoNavChallenge Path Slalom", AutoType. AutoNavChallenge_PathSlalom);
+  m_autoChooser.addOption("AutoNavChalleng Path Bounce", AutoType. AutoNavChallenge_PathBounce);
   SmartDashboard.putData(m_autoChooser);
 
   gyro = new ADXRS450_Gyro(kGyroPort);
@@ -71,9 +84,13 @@ public RobotContainer() {
 public void onAutoInit(){
     new InstantCommand(gyro::calibrate);
   }
-  
+ 
+
   public void onTeleopInit() {
+    SmartDashboard.putBoolean("Grab Work", RobotMap.GrabWorkKey);
+    SmartDashboard.putBoolean("Collect Work", RobotMap.CollectWorkKey);
     new StartJoystickArcadeDrive(driverTrain).schedule();
+    
     
   }
 
@@ -89,24 +106,66 @@ public void onAutoInit(){
 
   public void  configureButtonCollect(){
     m_oi.button1.toggleWhenPressed(new CollectBall(collectorBall));
+    
   }
 
   public void  configureButtonShoot(){
-    m_oi.button2.toggleWhenPressed(new ShootBall(shooterBall));
-  }
-  
-  public void  configureButtonGrab(){
     m_oi.button3.toggleWhenPressed(new ShootBall(shooterBall));
   }
   
-
+  public void  configureButtonGrab(){
+    m_oi.button2.toggleWhenPressed(new GrabBall(shooterBall));
+    
+  }
+  
   public void  configureButtonChangeAngle(){
     m_oi.povbutton1.toggleWhenPressed(new ChangeAngle(changeangle));
     m_oi.povbutton2.toggleWhenPressed(new ChangeAngle(changeangle));
   }
+public void getAutonomousCommand(){
+    switch(m_autoChooser.getSelected()){
+      case DO_NOTHING:
+       new WaitCommand(15);
+
+      case GalacticSearch_PathA_RED:
+      driverTrain.DriveByRecorde(RobotMap.GalacticSearch_PathA_RED_Xcord, RobotMap.GalacticSearch_PathA_RED_Ycord,"GalacticSearch_PathA_RED",true);
+
+      case GalacticSearch_PathA_BLUE:
+      driverTrain.DriveByRecorde(RobotMap.GalacticSearch_PathA_BLUE_Xcord, RobotMap.GalacticSearch_PathA_BLUE_Ycord,"GalacticSearch_PathA_BLUE",true);
+
+      case GalacticSearch_PathB_RED:
+      driverTrain.DriveByRecorde(RobotMap.GalacticSearch_PathB_RED_Xcord, RobotMap.GalacticSearch_PathB_RED_Ycord,"GalacticSearch_PathB_RED",true);
+
+      case GalacticSearch_PathB_BLUE:
+      driverTrain.DriveByRecorde(RobotMap.GalacticSearch_PathB_BLUE_Xcord, RobotMap.GalacticSearch_PathB_BLUE_Ycord,"GalacticSearch_PathB_BLUE",true);
+
+      case AutoNavChallenge_PathBarrelRacing:
+      driverTrain.DriveByRecorde(RobotMap.AutoNavChallenge_PathBarrelRacing_Xcord, RobotMap.AutoNavChallenge_PathBarrelRacing_Ycord,"AutoNavChallenge_PathBarrelRacing",false);
+
+      case AutoNavChallenge_PathSlalom:
+      driverTrain.DriveByRecorde(RobotMap.AutoNavChallenge_PathSlalom_Xcord, RobotMap.AutoNavChallenge_PathSlalom_Ycord,"AutoNavChallenge_PathSlalom",false);
+      
+      case AutoNavChallenge_PathBounce:
+      driverTrain.DriveByRecorde(RobotMap.AutoNavChallenge_PathBounce_Xcord, RobotMap.AutoNavChallenge_PathBounce_Ycord,"AutoNavChallenge_PathBounce",false);
+
+      default:
+        new WaitCommand(15);
+    }
+    
+}
+}
 
 
-public Command getAutonomousCommand(){
+
+
+
+
+
+
+
+
+/*
+
     TrajectoryConfig config = new TrajectoryConfig(3.0,3.0);
     config.setKinematics(driverTrain.getKinematics());
 
@@ -127,7 +186,7 @@ public Command getAutonomousCommand(){
         Arrays.asList(new Pose2d(), new Pose2d(5.0,0,new Rotation2d())),config);
         
        
-    String trajectoryJSON = "output/output/TEST.wpilib.json";
+    String trajectoryJSON = "output/output/Unnamed.wpilib.json";
     Trajectory Mission_Path = new Trajectory();
 
     try {
@@ -136,27 +195,4 @@ public Command getAutonomousCommand(){
     } catch (IOException ex) {
         DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
     }
-    return new RamseteTrajectoryCommand(driverTrain, Straight_Path);
-  }
-}
-
-
-//     switch(m_autoChooser.getSelected()){
-//       case DO_NOTHING:
-//         return new WaitCommand(15);
-
-//       case S_Path:
-//         return new RamseteTrajectoryCommand(driverTrain, S_Path);
-
-//       case Straight_Path:
-//       return new RamseteTrajectoryCommand(driverTrain, Straight_Path);
-
-//       case Mission_Path:
-//       return new RamseteTrajectoryCommand(driverTrain, Mission_Path);
-      
-//       default:
-//         return new WaitCommand(15);
-//     }
-// }
-
-
+*/

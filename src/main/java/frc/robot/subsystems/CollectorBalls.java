@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.OI;
 import frc.robot.RobotMap;
@@ -27,17 +29,15 @@ public class CollectorBalls extends SubsystemBase {
   if (new OI().getJoystick().getRawButton(7))
   velocity=-1;
 
-    if (new OI().getJoystick().getRawButton(1)){
+   
+      SmartDashboard.putBoolean("Collect Work", !(RobotMap.CollectWorkKey));
       gSpx_CollectMaster.set(ControlMode.PercentOutput, 0.45*velocity);
-
-    }
-    else{
-      gSpx_CollectMaster.set(ControlMode.PercentOutput, 0);
-  }
+    
 
 }
 
 public void stopCollect(){
+  SmartDashboard.putBoolean("Collect Work", RobotMap.CollectWorkKey);
   gSpx_CollectMaster.set(ControlMode.PercentOutput, 0);
 }
 }

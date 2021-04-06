@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.OI;
 import frc.robot.RobotMap;
@@ -25,29 +26,23 @@ public class ShooterBalls extends SubsystemBase {
 
   }
   public void startShoot(){
-  
-    if (new OI().getJoystick().getRawButton(2)){
+      SmartDashboard.putBoolean("Shoot Work", !(RobotMap.ShotWorkKey));
     gSpx_ShootMaster.set(ControlMode.PercentOutput, 1); 
-    System.out.println("workkk");
-    }
-    else{
-      gSpx_ShootMaster.set(ControlMode.PercentOutput, 0);
-    }
+    
   }
   public void startGrab(){
-    if (new OI().getJoystick().getRawButton(3)){
+      SmartDashboard.putBoolean("Grab Work", !(RobotMap.GrabWorkKey));
       gSpx_GrabMaster.set(ControlMode.PercentOutput, 0.7); 
-    }
-    else{
-      gSpx_GrabMaster.set(ControlMode.PercentOutput, 0);
-    }
+    
   }
 
  
   public void stopGrab() {
+    SmartDashboard.putBoolean("Grab Work", RobotMap.GrabWorkKey);
     gSpx_GrabMaster.set(ControlMode.PercentOutput, 0);
   }
   public void stopShot() {
+    SmartDashboard.putBoolean("Shoot Work", RobotMap.ShotWorkKey);
     gSpx_ShootMaster.set(ControlMode.PercentOutput, 0); 
   }
 }

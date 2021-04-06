@@ -6,7 +6,9 @@ package frc.robot;
 
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoCommandInterface;
@@ -67,6 +69,7 @@ public class Robot extends TimedRobot {
       // and running subsystem periodic() methods.  This must be called from the robot's periodic
       // block in order for anything in the Command-based framework to work.
       CommandScheduler.getInstance().run();
+     
   
       
     }
@@ -81,14 +84,13 @@ public class Robot extends TimedRobot {
     /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
     @Override
     public void autonomousInit() {
-    
-      m_robotContainer.onAutoInit();
-      m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+      m_robotContainer.getAutonomousCommand();
+      // m_robotContainer.onAutoInit();
+      // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+      // if (m_autonomousCommand != null) {
+      //   m_autonomousCommand.schedule();
 
-      if (m_autonomousCommand != null) {
-        m_autonomousCommand.schedule();
-
-      }
+      // }
 
     }
   
@@ -98,7 +100,7 @@ public class Robot extends TimedRobot {
 
   }
     
-
+  double startTime;
 
 
   @Override
@@ -111,15 +113,16 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+  
+    startTime = Timer.getFPGATimestamp();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    //CommandScheduler.getInstance().run();
-    // SmartDashboard.putNumber("angle1", gyro.getAngle());
-    // SmartDashboard.putNumber("angle2", gyro.getRate());
-    // SmartDashboard.putNumber("angle3", gyro.getRotation2d().getDegrees());
+   // m_robotContainer.onTeleopPeriodic();
+    double time = Timer.getFPGATimestamp();
+    SmartDashboard.putNumber("Time of",time - startTime);
 
 
   }

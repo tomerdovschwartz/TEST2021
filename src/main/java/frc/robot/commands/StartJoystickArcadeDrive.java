@@ -29,11 +29,9 @@ private DriverTrain m_driverTrain;
   public void execute() {
     double xAxis = new OI().GetDriverRawAxis(RobotMap.STICK_Y);
     double yAxis = new OI().GetDriverRawAxis(RobotMap.STICK_X);
-    double testpov = new OI().getJoystick().getPOV();
     m_driverTrain.ArcadeDrive(-xAxis, yAxis, true);
-    SmartDashboard.putNumber("Joystick X Value", xAxis);
-    SmartDashboard.putNumber("Joystick Y Value", yAxis);
-    SmartDashboard.putNumber("Joystick POV Value", testpov);
+    SmartDashboard.putNumber("Joystick X Value", yAxis);
+    SmartDashboard.putNumber("Joystick Y Value", xAxis);
   }
 
   // Called once the command ends or is interrupted.
