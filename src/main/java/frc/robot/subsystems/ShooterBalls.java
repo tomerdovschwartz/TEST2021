@@ -28,6 +28,7 @@ public class ShooterBalls extends SubsystemBase {
   
     if (new OI().getJoystick().getRawButton(2)){
     gSpx_ShootMaster.set(ControlMode.PercentOutput, 1); 
+    System.out.println("workkk");
     }
     else{
       gSpx_ShootMaster.set(ControlMode.PercentOutput, 0);
@@ -42,8 +43,11 @@ public class ShooterBalls extends SubsystemBase {
     }
   }
 
-  @Override
-  public void periodic() {
-    
+ 
+  public void stopGrab() {
+    gSpx_GrabMaster.set(ControlMode.PercentOutput, 0);
+  }
+  public void stopShot() {
+    gSpx_ShootMaster.set(ControlMode.PercentOutput, 0); 
   }
 }

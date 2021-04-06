@@ -3,10 +3,12 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.OI;
 import frc.robot.subsystems.CollectorBalls;
-import frc.robot.subsystems.DriverTrain;
+
 
 
 public class CollectBall extends CommandBase {
@@ -25,17 +27,20 @@ public class CollectBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_collectorballs.startCollect();
+     m_collectorballs.startCollect();
+   
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_collectorballs.stopCollect();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (new OI().getJoystick().getRawButtonReleased(1));
+    return !(new OI().getJoystick().getRawButton(1));
   }
 
   

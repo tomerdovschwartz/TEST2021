@@ -3,16 +3,11 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
-import edu.wpi.first.networktables.LogMessage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.OI;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.RobotMap;
-import frc.robot.subsystems.CollectorBalls;
 import frc.robot.subsystems.DriverTrain;
 
 
@@ -32,12 +27,6 @@ private DriverTrain m_driverTrain;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    new CollectBall(RobotContainer.collectorBall).execute();
-    new ShootBall((RobotContainer.shooterBall)).execute();
-    new ChangeAngle((RobotContainer.changeangle)).execute();
-   
-
-
     double xAxis = new OI().GetDriverRawAxis(RobotMap.STICK_Y);
     double yAxis = new OI().GetDriverRawAxis(RobotMap.STICK_X);
     double testpov = new OI().getJoystick().getPOV();

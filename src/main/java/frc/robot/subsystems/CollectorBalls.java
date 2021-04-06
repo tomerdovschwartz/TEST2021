@@ -36,4 +36,8 @@ public class CollectorBalls extends SubsystemBase {
   }
 
 }
+
+public void stopCollect(){
+  gSpx_CollectMaster.set(ControlMode.PercentOutput, 0);
+}
 }

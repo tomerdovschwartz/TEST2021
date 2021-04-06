@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI;
@@ -45,37 +44,20 @@ public class DriverTrain extends SubsystemBase {
   private TalonSRX driveRightFollowTwo;
   
    static final SPI.Port kGyroPort = SPI.Port.kOnboardCS0;
-   ADXRS450_Gyro gyro = new ADXRS450_Gyro(kGyroPort);
+   ADXRS450_Gyro gyro;
   
    DifferentialDriveKinematics kinematics = new  DifferentialDriveKinematics(0.52);
    DifferentialDriveOdometry  odometry ;
-   DifferentialDriveWheelSpeeds m_prevSpeeds ;
-
    private Pose2d pose;
-
-  
    
-  PIDController leftPIDController= new PIDController(1.0, 0.1, 0.1); 
-  PIDController rightPIDController= new PIDController(1.0, 0.1, 0.1); 
-/**NEED TO CHANGE!! with frc-characterization
- Parameters:
-    kp The proportional coefficient.
-    ki The integral coefficient.
-    kd The derivative coefficient
- */
+  PIDController leftPIDController= new PIDController(8.5, 0, 0); 
+  PIDController rightPIDController= new PIDController(8.5, 0, 0); 
 
-  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.5, 1);
-/**NEED TO CHANGE
- * Parameters:
-    ks The static gain.  
-    kv The velocity gain.
- */
+  SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(0.22,1.98,0.2);
 
 
 /** Creates a new DriverTrain. */
   public DriverTrain() {
-
-        gyro.calibrate();
         double talon_P = 1.0D;
         this.driveLeftMaster = new TalonSRX(RobotMap.DRIVE_LEFT_MASTER);
         this.driveLeftMaster.setNeutralMode(NeutralMode.Brake);
@@ -111,7 +93,7 @@ public class DriverTrain extends SubsystemBase {
           // Configure the motors
           for(TalonSRX fx : new TalonSRX[] {driveLeftMaster,driveLeftFollowOne,driveLeftFollowTwo, driveRightMaster,driveRightFollowOne,driveRightFollowTwo}){
             //Reset settings for safety
-            fx.configFactoryDefault();
+           // fx.configFactoryDefault();
 
             //Sets voltage compensation to 12, used for percent output
             fx.configVoltageCompSaturation(12);
@@ -128,17 +110,12 @@ public class DriverTrain extends SubsystemBase {
             //Setting deadband(area required to start moving the motor) to 1%
             fx.configNeutralDeadband(0.01);
 
-            /** 
-             * Setting input side current limit (amps)
-             * 45 continious, 80 peak, 30 millieseconds allowed at peak
-             * 40 amp breaker can support above 40 amps for a little bit
-             * Falcons have insane acceleration so allowing it to reach 80 for 0.03 seconds should be fine
-             */
-            fx.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 55, 20));
-
             //Either using the integrated Falcon sensor or an external one, will change if needed
             fx.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         }
+
+        gyro = new ADXRS450_Gyro(kGyroPort);
+        gyro.calibrate();
         
         Rotation2d initialHeading = new Rotation2d(gyro.getAngle());
         pose=new Pose2d(0,0,initialHeading);
@@ -150,7 +127,7 @@ public class DriverTrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-    //setDefaultCommand(new StartJoystickArcadeDrive(Robot.driverTrain));
+
      pose=odometry.update(getHeading(),getSpeeds().leftMetersPerSecond,getSpeeds().rightMetersPerSecond);
      
      SmartDashboard.putNumber("getPose() X:", getPose().getX());
@@ -171,8 +148,8 @@ public class DriverTrain extends SubsystemBase {
     {
         return new DifferentialDriveWheelSpeeds(
           
-            driveLeftMaster.getMotorOutputPercent()*5.0,
-            driveRightMaster.getMotorOutputPercent()*5.0
+            driveLeftMaster.getMotorOutputPercent()*3.0,
+            driveRightMaster.getMotorOutputPercent()*3.0
             );
  
     }
@@ -190,7 +167,7 @@ public class DriverTrain extends SubsystemBase {
 
     public Pose2d getPose(){
         
-        return pose;
+        return odometry.getPoseMeters();
     }
    
 
