@@ -290,10 +290,10 @@ public class DriverTrain extends SubsystemBase {
                 new CollectorBalls().stopCollect();
                 
             }
-            while((Timer.getFPGATimestamp()-startTimedrive)<0.09){
+            while((Timer.getFPGATimestamp()-startTimedrive)<0.15){
                 
             }
-           System.out.println("y:"+-cordinateY[i]+" x: "+cordinateX[i]+" GRAB "+GrabON[i]+" COLLECT "+CollectON[i]);
+           SmartDashboard.putNumber("PLACE", i);
         }
     }
   

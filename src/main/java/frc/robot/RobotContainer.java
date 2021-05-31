@@ -25,13 +25,14 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.ChangeAngle;
 import frc.robot.commands.CollectBall;
-import frc.robot.commands.GrabBall;
 import frc.robot.commands.RamseteTrajectoryCommand;
-import frc.robot.commands.ShootBall;
+import frc.robot.commands.ShootGrabBall;
 import frc.robot.subsystems.ChangeAngleDirection;
 import frc.robot.subsystems.CollectorBalls;
 import frc.robot.subsystems.DriverTrain;
@@ -96,9 +97,8 @@ public void onAutoInit(){
 
   private void configureButtonBindings() {
 
-    configureButtonShoot();
     configureButtonCollect();
-    configureButtonGrab();
+    configureButtonShootGrab();
     configureButtonChangeAngle();
 
 
@@ -106,18 +106,11 @@ public void onAutoInit(){
 
   public void  configureButtonCollect(){
     m_oi.button1.toggleWhenPressed(new CollectBall(collectorBall));
-    
   }
-
-  public void  configureButtonShoot(){
-    m_oi.button3.toggleWhenPressed(new ShootBall(shooterBall));
-  }
-  
-  public void  configureButtonGrab(){
-    m_oi.button2.toggleWhenPressed(new GrabBall(shooterBall));
-    
-  }
-  
+  public void  configureButtonShootGrab(){
+    m_oi.button3.toggleWhenPressed(new ShootGrabBall(shooterBall));
+    m_oi.button2.toggleWhenPressed(new ShootGrabBall(shooterBall));
+  }  
   public void  configureButtonChangeAngle(){
     m_oi.povbutton1.toggleWhenPressed(new ChangeAngle(changeangle));
     m_oi.povbutton2.toggleWhenPressed(new ChangeAngle(changeangle));

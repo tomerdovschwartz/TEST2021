@@ -32,7 +32,7 @@ public class ShooterBalls extends SubsystemBase {
   }
   public void startGrab(){
       SmartDashboard.putBoolean("Grab Work", !(RobotMap.GrabWorkKey));
-      gSpx_GrabMaster.set(ControlMode.PercentOutput, 0.7); 
+      gSpx_GrabMaster.set(ControlMode.PercentOutput, 0.8); 
     
   }
 

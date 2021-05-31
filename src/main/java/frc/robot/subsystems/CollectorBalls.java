@@ -29,7 +29,6 @@ public class CollectorBalls extends SubsystemBase {
   if (new OI().getJoystick().getRawButton(7))
   velocity=-1;
 
-   
       SmartDashboard.putBoolean("Collect Work", !(RobotMap.CollectWorkKey));
       gSpx_CollectMaster.set(ControlMode.PercentOutput, 0.45*velocity);
     
