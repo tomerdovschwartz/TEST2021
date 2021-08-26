@@ -17,11 +17,16 @@ public class CollectorBalls extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private VictorSPX gSpx_CollectMaster = null;
+  private VictorSPX gSpx_GrabMaster = null;
   int velocity=1;
 
   public CollectorBalls()
   {
    gSpx_CollectMaster = new VictorSPX(RobotMap.COLLECT_MASTER);
+   
+   this.gSpx_GrabMaster = new VictorSPX(RobotMap.GRAB_MASTER);
+
+ 
   }
 
   public void startCollect(){
@@ -31,12 +36,21 @@ public class CollectorBalls extends SubsystemBase {
 
       SmartDashboard.putBoolean("Collect Work", !(RobotMap.CollectWorkKey));
       gSpx_CollectMaster.set(ControlMode.PercentOutput, 0.45*velocity);
-    
+
+}
+public void startGrab(){
+  SmartDashboard.putBoolean("Grab Work", !(RobotMap.GrabWorkKey));
+  gSpx_GrabMaster.set(ControlMode.PercentOutput, 0.80); 
 
 }
 
 public void stopCollect(){
   SmartDashboard.putBoolean("Collect Work", RobotMap.CollectWorkKey);
   gSpx_CollectMaster.set(ControlMode.PercentOutput, 0);
+}
+
+public void stopGrab() {
+  SmartDashboard.putBoolean("Grab Work", RobotMap.GrabWorkKey);
+  gSpx_GrabMaster.set(ControlMode.PercentOutput, 0);
 }
 }

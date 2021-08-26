@@ -29,6 +29,7 @@ public class CollectBall extends CommandBase {
   @Override
   public void execute() {
       m_collectorballs.startCollect();
+      m_collectorballs.startGrab();
      
    
   }
@@ -37,6 +38,7 @@ public class CollectBall extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_collectorballs.stopCollect();
+    m_collectorballs.stopGrab();
   }
 
   // Returns true when the command should end.

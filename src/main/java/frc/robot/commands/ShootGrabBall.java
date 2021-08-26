@@ -28,10 +28,9 @@ public class ShootGrabBall extends CommandBase {
 @Override
   public void execute() {
 
-    if (new OI().getJoystick().getRawButton(3))
+    if (new OI().getJoystick().getRawButtonPressed(11))
     m_shooterballs.startShoot();
-    else
-    m_shooterballs.stopShot();
+
 
 
     if (new OI().getJoystick().getRawButton(2))
@@ -44,7 +43,7 @@ public class ShootGrabBall extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_shooterballs.stopGrab();
-    m_shooterballs.stopShot();
+  //  m_shooterballs.stopShot();
   }
 
   // Returns true when the command should end.
