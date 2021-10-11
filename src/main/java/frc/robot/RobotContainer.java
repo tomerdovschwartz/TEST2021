@@ -109,7 +109,7 @@ public void onAutoInit(){
   }
   public void  configureButtonShootGrab(){
     m_oi.button3.toggleWhenPressed(new ShootGrabBall(shooterBall));
-    m_oi.button2.toggleWhenPressed(new ShootGrabBall(shooterBall));
+   // m_oi.button2.toggleWhenPressed(new ShootGrabBall(shooterBall));
   }  
   public void  configureButtonChangeAngle(){
     m_oi.povbutton1.toggleWhenPressed(new ChangeAngle(changeangle));

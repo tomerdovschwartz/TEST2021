@@ -27,11 +27,7 @@ public class ShootGrabBall extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
 @Override
   public void execute() {
-
-    if (new OI().getJoystick().getRawButtonPressed(11))
     m_shooterballs.startShoot();
-
-
 
     if (new OI().getJoystick().getRawButton(2))
     m_shooterballs.startGrab();
@@ -42,13 +38,13 @@ public class ShootGrabBall extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooterballs.stopGrab();
-  //  m_shooterballs.stopShot();
+    
+    m_shooterballs.stopShot();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return (new OI().getJoystick().getRawButtonPressed(4));
   }
   }
